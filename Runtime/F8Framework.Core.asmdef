@@ -11,7 +11,8 @@
         "kcp2k",
         "Telepathy",
         "SimpleWebTransport",
-        "HybridCLR.Runtime"
+        "HybridCLR.Runtime",
+        "YooAsset"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

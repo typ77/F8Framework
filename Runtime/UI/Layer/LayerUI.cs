@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using YooAsset;
 
 namespace F8Framework.Core
 {
@@ -114,7 +115,22 @@ namespace F8Framework.Core
             }
             else
             {
-                AssetManager.Instance.LoadAsync<GameObject>(viewParams.PrefabPath, (res) =>
+                var handle = YooAssets.LoadAssetAsync<GameObject>(viewParams.PrefabPath);
+                handle.Completed += (asset) =>
+                {
+                    GameObject childNode = Instantiate(asset.AssetObject as GameObject, gameObject.transform, false);
+                    childNode.name = viewParams.PrefabPath;
+                    viewParams.Go = childNode;
+                
+                    DelegateComponent comp = childNode.AddComponent<DelegateComponent>();
+                    viewParams.DelegateComponent = comp;
+                    viewParams.BaseView = childNode.GetComponent<BaseView>();
+                    comp.ViewParams = viewParams;
+                
+                    CreateNode(viewParams);
+                    asset.Release();
+                };
+                /*AssetManager.Instance.LoadAsync<GameObject>(viewParams.PrefabPath, (res) =>
                 {
                     GameObject childNode = Instantiate(res, gameObject.transform, false);
                     childNode.name = viewParams.PrefabPath;
@@ -126,7 +142,7 @@ namespace F8Framework.Core
                     comp.ViewParams = viewParams;
                 
                     CreateNode(viewParams);
-                });
+                });*/
             }
         }
 

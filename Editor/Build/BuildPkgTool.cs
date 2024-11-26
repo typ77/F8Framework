@@ -35,7 +35,7 @@ namespace F8Framework.Core.Editor
         private static bool _enableOptionalPackage = false;
         private static bool _enableNullPackage = false;
         private static string _optionalPackage = "0_1_2_3";
-        private static string _assetRemoteAddress = "http://127.0.0.1:6789" + HotUpdateManager.RemoteDirName;
+        private static string _assetRemoteAddress = "http://127.0.0.1:6789" ;//+ HotUpdateManager.RemoteDirName;
         private static bool _enablePackage = false;
         
         private static BuildTarget _buildTarget = BuildTarget.NoTarget;
@@ -56,7 +56,7 @@ namespace F8Framework.Core.Editor
         // 构建热更版本
         public static void BuildUpdate()
         {
-            string buildPath = F8EditorPrefs.GetString(_prefBuildPathKey, "");
+            /*string buildPath = F8EditorPrefs.GetString(_prefBuildPathKey, "");
             
             string toVersion = F8EditorPrefs.GetString(_toVersionKey, "");
             
@@ -106,7 +106,7 @@ namespace F8Framework.Core.Editor
                 hotUpdateMapPath);
             
             LogF8.LogVersion("构建热更新包版本成功！版本：" + toVersion);
-            
+            */
             AssetDatabase.Refresh();
         }
         
@@ -130,7 +130,7 @@ namespace F8Framework.Core.Editor
         /// </summary>
         public static void Build()
         {
-            string appName = Application.productName;
+            /*string appName = Application.productName;
             
             string buildPath = F8EditorPrefs.GetString(_prefBuildPathKey, "");
             
@@ -260,7 +260,7 @@ namespace F8Framework.Core.Editor
                 FileTools.SafeDeleteDir(toPath);
                 LogF8.LogVersion("游戏空包打包成功! " + locationPathName);
             }
-            
+            */
             AssetDatabase.Refresh();
         }
 
@@ -404,7 +404,7 @@ namespace F8Framework.Core.Editor
         // 打包游戏
         public static void DrawBuildPkg()
         {
-            GUILayout.Space(5);
+            /*GUILayout.Space(5);
             GUILayout.Label("【打包游戏】", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, fontSize = 16 });
             GUILayout.Space(10);
             
@@ -522,11 +522,11 @@ namespace F8Framework.Core.Editor
             {
                 System.Diagnostics.Process.Start(Application.persistentDataPath);
             }
-            GUILayout.EndHorizontal();
+            GUILayout.EndHorizontal();*/
         }
         
         // 复制需要热更新的AB
-        private static void CopyHotUpdateAb(string assetBundlesOutPath, Dictionary<string, AssetBundleMap.AssetMapping> mappings, string toPath)
+        /*private static void CopyHotUpdateAb(string assetBundlesOutPath, Dictionary<string, AssetBundleMap.AssetMapping> mappings, string toPath)
         {
             Dictionary<string, AssetBundleMap.AssetMapping> temp_mappings =
                 new Dictionary<string, AssetBundleMap.AssetMapping>();
@@ -571,10 +571,10 @@ namespace F8Framework.Core.Editor
                 }
             }
             AssetDatabase.Refresh();
-        }
+        }*/
         
         // 复制并删除不需要打进包里的AB
-        private static void CopyDeleteUnnecessaryAb(string assetBundlesOutPath, Dictionary<string, AssetBundleMap.AssetMapping> mappings, string toPath, string toPath2, string package)
+        /*private static void CopyDeleteUnnecessaryAb(string assetBundlesOutPath, Dictionary<string, AssetBundleMap.AssetMapping> mappings, string toPath, string toPath2, string package)
         {
             Dictionary<string, AssetBundleMap.AssetMapping> temp_mappings =
                 new Dictionary<string, AssetBundleMap.AssetMapping>();
@@ -631,19 +631,19 @@ namespace F8Framework.Core.Editor
             }
             AssetDatabase.Refresh();
         }
-        
+        */
         // 写入资产版本
         public static void WriteAssetVersion()
         {
             string buildPath = F8EditorPrefs.GetString(_prefBuildPathKey, "");
             
-            string assetBundleMapPath = Application.dataPath + "/F8Framework/AssetMap/Resources/" + nameof(AssetBundleMap) + ".json";
-            FileTools.SafeCopyFile(assetBundleMapPath, buildPath + HotUpdateManager.RemoteDirName + "/" + nameof(AssetBundleMap) + ".json");
-            UnityEditor.AssetDatabase.Refresh();
+            //string assetBundleMapPath = Application.dataPath + "/F8Framework/AssetMap/Resources/" + nameof(AssetBundleMap) + ".json";
+            //FileTools.SafeCopyFile(assetBundleMapPath, buildPath + HotUpdateManager.RemoteDirName + "/" + nameof(AssetBundleMap) + ".json");
+            //UnityEditor.AssetDatabase.Refresh();
         }
 
         // 写入游戏版本
-        public static void WriteGameVersion()
+        /*public static void WriteGameVersion()
         {
             string optionalPackage = F8EditorPrefs.GetString(_optionalPackageKey, "");
             
@@ -688,7 +688,7 @@ namespace F8Framework.Core.Editor
             LogF8.LogVersion("写入游戏版本： " + gameVersion.Version);
             UnityEditor.AssetDatabase.Refresh();
         }
-        
+        */
         // 获取构建平台Group
         private static BuildTargetGroup GetBuildTargetGroup(BuildTarget target)
         {

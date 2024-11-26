@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Internal;
+using YooAsset;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -10,7 +11,8 @@ namespace F8Framework.Core
 {
     public class AudioEffect
     {
-        private Dictionary<string, AudioClip> _effects = new Dictionary<string, AudioClip>();
+        //private Dictionary<string, AudioClip> _effects = new Dictionary<string, AudioClip>();
+        private Dictionary<string, AssetHandle> _effects = new Dictionary<string, AssetHandle>();
         private Dictionary<string, int> _effectsNum = new Dictionary<string, int>();
         // 定义音量和音高的范围
         private float minVolume = 0.6f;
@@ -38,18 +40,28 @@ namespace F8Framework.Core
             }
             _effectsNum[url] = count + 1;
             
-            if (_effects != null && _effects.TryGetValue(url, out AudioClip audioClip) && audioClip)
+            if (_effects.TryGetValue(url, out var asset))
             {
-                PlayClipAtPoint(url, audioClip, position, volume, spatialBlend, callback, audioEffectMixerGroup, isRandom);
+                PlayClipAtPoint(url, asset.AssetObject as AudioClip, position, volume, spatialBlend, callback, audioEffectMixerGroup, isRandom);
             }
             else
             {
-                AssetManager.Instance.LoadAsync<AudioClip>(url, (asset) =>
+                var handle = YooAssets.LoadAssetAsync<AudioClip>(url);
+                handle.Completed += (assetHandle) =>
+                {
+                    if (_effects.TryGetValue(url, out var value))
+                    {
+                        value.Release();
+                    }
+                    _effects[url] = assetHandle;
+                    PlayClipAtPoint(url, assetHandle.AssetObject as AudioClip, position, volume, spatialBlend, callback, audioEffectMixerGroup, isRandom);
+                };
+                /*AssetManager.Instance.LoadAsync<AudioClip>(url, (asset) =>
                 {
                     _effects[url] = asset;
                     
                     PlayClipAtPoint(url, _effects[url], position, volume, spatialBlend, callback, audioEffectMixerGroup, isRandom);
-                });
+                });*/
             }
         }
         
@@ -96,7 +108,9 @@ namespace F8Framework.Core
         {
             foreach (var item in _effects)
             {
-                AssetManager.Instance.Unload(item.Key, unloadAllLoadedObjects);
+                var handle = item.Value;
+                handle.Release();
+                //AssetManager.Instance.Unload(item.Key, unloadAllLoadedObjects);
             }
             _effects.Clear();
             _effectsNum.Clear();

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using YooAsset;
 
 namespace F8Framework.Core
 {
@@ -7,6 +8,7 @@ namespace F8Framework.Core
 	{
 		readonly Image image;
 		readonly Sprite[] sprites;
+		private AssetHandle handle;
 
 		public UIImageInjector(Image image, Sprite[] sprites)
 		{
@@ -22,7 +24,20 @@ namespace F8Framework.Core
 			}
 			else if (localizedData is string textIDValue)
 			{
-				AssetManager.Instance.LoadAsync(textIDValue, typeof(Sprite), (asset) =>
+				handle?.Release();
+				handle = YooAssets.LoadAssetAsync(textIDValue);
+				handle.Completed += (asset) =>
+				{
+					if (asset.AssetObject is Texture2D texture)
+					{
+						Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+						image.sprite = sprite;
+						LogF8.LogAsset("本地化图片类型错误，已自动转换：" + asset);
+						return;
+					}
+					image.sprite = asset.AssetObject as Sprite;
+				};
+				/*AssetManager.Instance.LoadAsync(textIDValue, typeof(Sprite), (asset) =>
 				{
 					if (asset is Texture2D texture)
 					{
@@ -32,7 +47,7 @@ namespace F8Framework.Core
 						return;
 					}
 					image.sprite = asset as Sprite;
-				});
+				});*/
 			}
 		}
 	}

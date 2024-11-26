@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using YooAsset;
 
 namespace F8Framework.Core
 {
     public class AudioMusic
     {
-        private Dictionary<string, AudioClip> _audios = new Dictionary<string, AudioClip>();
+        //private Dictionary<string, AudioClip> _audios = new Dictionary<string, AudioClip>();
+        private readonly Dictionary<string, AssetHandle> _audios = new Dictionary<string, AssetHandle>();
         // 背景音乐播放完成回调
         public System.Action OnComplete;
         private float _progress = 0;
@@ -38,18 +40,28 @@ namespace F8Framework.Core
             MusicSource.loop = loop;
             Priority = priority;
             
-            if (_audios != null && _audios.TryGetValue(url, out AudioClip audioClip) && audioClip)
+            if (_audios.TryGetValue(url, out var asset))
             {
-                PlayClip(audioClip, callback, fadeDuration);
+                PlayClip(asset.AssetObject as AudioClip, callback, fadeDuration);
             }
             else
             {
-                AssetManager.Instance.LoadAsync<AudioClip>(url, (asset) =>
+                var handle = YooAssets.LoadAssetAsync<AudioClip>(url);
+                handle.Completed += (assetHandle) =>
                 {
-                    _audios[url] = asset;
+                    if (_audios.TryGetValue(url, out var value))
+                    {
+                        value.Release();
+                    }
+                    _audios[url] = assetHandle;
+                    PlayClip(assetHandle.AssetObject as AudioClip, callback, fadeDuration);
+                };
+                //AssetManager.Instance.LoadAsync<AudioClip>(url, (asset) =>
+                //{
+                //    _audios[url] = asset;
                     
-                    PlayClip(_audios[url], callback, fadeDuration);
-                });
+                //    PlayClip(_audios[url], callback, fadeDuration);
+                //});
             }
         }
 
@@ -95,7 +107,9 @@ namespace F8Framework.Core
         {
             foreach (var item in _audios)
             {
-                AssetManager.Instance.Unload(item.Key, unloadAllLoadedObjects);
+                var handle = item.Value;
+                handle.Release();
+                //AssetManager.Instance.Unload(item.Key, unloadAllLoadedObjects);
             }
             _audios.Clear();
         }

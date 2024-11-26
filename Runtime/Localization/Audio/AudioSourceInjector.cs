@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using YooAsset;
 
 namespace F8Framework.Core
 {
 	public class AudioSourceInjector : IInjector
 	{
 		readonly AudioSource audio;
+		private AssetHandle handle;
 
 		public AudioSourceInjector(AudioSource audio)
 		{
@@ -24,7 +26,13 @@ namespace F8Framework.Core
 			}
 			else if (localizedData is string textIDValue)
 			{
-				AssetManager.Instance.LoadAsync<AudioClip>(textIDValue, Play);
+				handle?.Release();
+				handle = YooAssets.LoadAssetAsync<AudioClip>(textIDValue);
+				handle.Completed += (asset) =>
+				{
+					Play(asset.AssetObject as AudioClip);
+				};
+				//AssetManager.Instance.LoadAsync<AudioClip>(textIDValue, Play);
 			}
 			
 			void Play(AudioClip clip)

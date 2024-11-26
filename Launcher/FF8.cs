@@ -25,28 +25,28 @@ namespace F8Framework.Launcher
         // 游戏对象池
         private static GameObjectPool _gameObjectPool;
         // 资产管理
-        private static AssetManager _asset;
-        // 读取配置表-->使用了资产模块
+        //private static AssetManager _asset;
+        // 读取配置表-->使用了资产模块(被替换为YooAsset）
         private static F8DataManager _config;
-        // 音频管理-->使用了资产模块-->使用了游戏对象池模块-->使用了补间动画模块-->使用了时间模块
+        // 音频管理-->使用了资产模块(被替换为YooAsset）-->使用了游戏对象池模块-->使用了补间动画模块-->使用了时间模块
         private static AudioManager _audio;
         // 补间动画
         private static Tween _tween;
-        // UI界面管理-->使用了资产模块
+        // UI界面管理-->使用了资产模块(被替换为YooAsset）
         private static UIManager _ui;
-        // 本地化-->使用了配置模块-->使用了资产模块
+        // 本地化-->使用了配置模块-->使用了资产模块(被替换为YooAsset）
         private static Localization _localization;
         // SDK管理-->使用了消息模块
         private static SDKManager _sdkManager;
         // 下载管理器
-        private static DownloadManager _downloadManager;
+        //private static DownloadManager _downloadManager;
         // 日志助手
         private static F8LogWriter _logWriter;
         
         
         /* ------------------------可选模块------------------------ */
         // 热更新版本管理-->使用了下载模块-->使用了资产模块
-        private static HotUpdateManager _hotUpdateManager;
+        //private static HotUpdateManager _hotUpdateManager;
         
         
         public static MessageManager Message
@@ -176,7 +176,7 @@ namespace F8Framework.Launcher
             }
         }
 
-        public static AssetManager Asset
+        /*public static AssetManager Asset
         {
             get
             {
@@ -189,7 +189,7 @@ namespace F8Framework.Launcher
                 if (_asset == null)
                     _asset = value;
             }
-        }
+        }*/
         
         public static F8DataManager Config
         {
@@ -281,7 +281,7 @@ namespace F8Framework.Launcher
             }
         }
         
-        public static DownloadManager Download
+        /*public static DownloadManager Download
         {
             get
             {
@@ -294,7 +294,7 @@ namespace F8Framework.Launcher
                 if (_downloadManager == null)
                     _downloadManager = value;
             }
-        }
+        }*/
         
         public static F8LogWriter LogWriter
         {
@@ -311,7 +311,7 @@ namespace F8Framework.Launcher
             }
         }
         
-        public static HotUpdateManager HotUpdate
+        /*public static HotUpdateManager HotUpdate
         {
             get
             {
@@ -324,7 +324,7 @@ namespace F8Framework.Launcher
                 if (_hotUpdateManager == null)
                     _hotUpdateManager = value;
             }
-        }
+        }*/
     }
 }
 

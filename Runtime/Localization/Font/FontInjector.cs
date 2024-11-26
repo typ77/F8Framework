@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using YooAsset;
 #if LOCALIZER_TMP
 using TMPro;
 #endif
@@ -13,7 +14,7 @@ namespace F8Framework.Core
 #if LOCALIZER_TMP
 		readonly TMP_Text TMP_text;
 #endif
-
+		private AssetHandle handle;
 		public FontInjector(Text text)
 		{
 			this.text = text;
@@ -55,7 +56,34 @@ namespace F8Framework.Core
 #endif
 			else if (localizedData is string textIDValue)
 			{
-				AssetManager.Instance.LoadAsync(textIDValue, (asset) =>
+				handle?.Release();
+				handle = YooAssets.LoadAssetAsync(textIDValue);
+				handle.Completed += (asset) =>
+				{
+					//Play(asset.AssetObject as AudioClip);
+					if (asset.AssetObject is Font loadFont)
+					{
+						if (text)
+						{
+							text.font = loadFont;
+						}
+						else if (textMesh)
+						{
+							text.font = loadFont;
+						}
+						return;
+					}
+#if LOCALIZER_TMP
+					if (asset.AssetObject is TMP_FontAsset loadTMP_fontAsset)
+					{
+						if (TMP_text)
+						{
+							TMP_text.font = loadTMP_fontAsset;
+						}
+					}
+#endif
+				};
+/*				AssetManager.Instance.LoadAsync(textIDValue, (asset) =>
 				{
 					if (asset is Font loadFont)
 					{
@@ -78,7 +106,7 @@ namespace F8Framework.Core
 						}
 					}
 #endif
-				});
+				});*/
 			}
 		}
 	}

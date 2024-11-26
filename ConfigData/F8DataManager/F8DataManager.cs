@@ -12,6 +12,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using F8Framework.Core;
 using UnityEngine.Scripting;
+using YooAsset;
 
 namespace F8Framework.F8ExcelDataClass
 {
@@ -128,20 +129,25 @@ namespace F8Framework.F8ExcelDataClass
 		public T Load<T>(string name)
 		{
 			IFormatter f = new BinaryFormatter();
-			TextAsset textAsset = AssetManager.Instance.Load<TextAsset>(name);
+			var handle = YooAssets.LoadAssetSync<TextAsset>(name);
+			//TextAsset textAsset = AssetManager.Instance.Load<TextAsset>(name);
+			if (handle.AssetObject == null)
+			{
+				return default(T);
+			}
+			var textAsset = handle.AssetObject as TextAsset;
 			if (textAsset == null)
 			{
 				return default(T);
 			}
-			AssetManager.Instance.Unload(name, false);
+			//AssetManager.Instance.Unload(name, false);
+			handle.Release();
 #if UNITY_WEBGL
 			T obj = Util.LitJson.ToObject<T>(textAsset.text);
 			return obj;
 #else
-			using (MemoryStream memoryStream = new MemoryStream(textAsset.bytes))
-			{
-				return (T)f.Deserialize(memoryStream);
-			}
+			using var memoryStream = new MemoryStream(textAsset.bytes);
+			return (T)f.Deserialize(memoryStream);
 #endif
 		}
 
@@ -149,12 +155,15 @@ namespace F8Framework.F8ExcelDataClass
 		public IEnumerator LoadAsync<T>(string name, Action<T> callback)
 		{
 			IFormatter f = new BinaryFormatter();
-			var load = AssetManager.Instance.LoadAsyncCoroutine<TextAsset>(name);
-			yield return load;
-			TextAsset textAsset = AssetManager.Instance.GetAssetObject<TextAsset>(name);
+			var handle = YooAssets.LoadAssetSync<TextAsset>(name);
+			//var load = AssetManager.Instance.LoadAsyncCoroutine<TextAsset>(name);
+			yield return handle;
+			//TextAsset textAsset = AssetManager.Instance.GetAssetObject<TextAsset>(name);
+			var textAsset = handle.AssetObject as TextAsset;
+			handle.Release();
 			if (textAsset != null)
 			{
-				AssetManager.Instance.Unload(name, false);
+				//AssetManager.Instance.Unload(name, false);
 #if UNITY_WEBGL
 				T obj = Util.LitJson.ToObject<T>(textAsset.text);
 				callback(obj);

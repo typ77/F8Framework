@@ -2,7 +2,8 @@
     "name": "F8Framework.F8ExcelDataClass",
     "references": [
         "F8Framework.Core",
-        "LitJson"
+        "LitJson",
+        "YooAsset"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

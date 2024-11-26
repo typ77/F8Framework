@@ -13,7 +13,7 @@ namespace F8Framework.Launcher
             ModuleCenter.Initialize(this);
 
             // 初始化版本
-            FF8.HotUpdate = ModuleCenter.CreateModule<HotUpdateManager>();
+            //FF8.HotUpdate = ModuleCenter.CreateModule<HotUpdateManager>();
 
             // 按顺序创建模块，可按需添加
             FF8.Message = ModuleCenter.CreateModule<MessageManager>();
@@ -24,7 +24,7 @@ namespace F8Framework.Launcher
             FF8.Network = ModuleCenter.CreateModule<NetworkManager>();
             FF8.FSM = ModuleCenter.CreateModule<FSMManager>();
             FF8.GameObjectPool = ModuleCenter.CreateModule<GameObjectPool>();
-            FF8.Asset = ModuleCenter.CreateModule<AssetManager>();
+            //FF8.Asset = ModuleCenter.CreateModule<AssetManager>();
 #if UNITY_WEBGL
             yield return AssetBundleManager.Instance.LoadAssetBundleManifest(); // WebGL专用，如果游戏中没有使用任何AB包加载资源，可以删除此方法的调用！
 #endif
@@ -37,7 +37,7 @@ namespace F8Framework.Launcher
 #endif
             FF8.Local = ModuleCenter.CreateModule<Localization>();
             FF8.SDK = ModuleCenter.CreateModule<SDKManager>();
-            FF8.Download = ModuleCenter.CreateModule<DownloadManager>();
+            //FF8.Download = ModuleCenter.CreateModule<DownloadManager>();
             FF8.LogWriter = ModuleCenter.CreateModule<F8LogWriter>();
 
             StartGame();
