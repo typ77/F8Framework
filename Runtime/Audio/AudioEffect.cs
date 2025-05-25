@@ -79,14 +79,17 @@ namespace F8Framework.Core
                 audioSource.outputAudioMixerGroup = audioEffectMixerGroup;
             audioSource.Play();
             
-            float time = clip.length * ((double)Time.timeScale < 0.009999999776482582 ? 0.01f : Time.timeScale);
-            TimerManager.Instance.AddTimer(this, 1f, time, 1, null, () =>
+            //float time = clip.length * ((double)Time.timeScale < 0.009999999776482582 ? 0.01f : Time.timeScale);
+            var time = (long)(clip.length * 1000);
+            //因此定时器受timeScale影响，暂停或加速都会根据实际timeScale触发
+            TimerManager.Instance.AddOnceGameTimer(time, (count, finish) =>
             {
                 GameObjectPool.Instance.Despawn(gameObject);
-                if (_effectsNum.TryGetValue(url, out int num))
+                if (_effectsNum.TryGetValue(url, out var num))
                 {
                     _effectsNum[url] = num - 1;
                 }
+
                 callback?.Invoke();
             });
         }
